@@ -15,13 +15,11 @@ public class Main {
         Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId());
         taskManager.addSubtask(subtask1);
 
-        taskManager.updateEpicStatus(epic1.getId());
-        System.out.println("Статус эпика 1: " + epic1.getStatus());
+        System.out.println("Статус эпика 1: " + taskManager.getEpic(epic1.getId()).getStatus());
 
         subtask1.setStatus(Status.DONE);
         taskManager.updateSubtask(subtask1);
-        taskManager.updateEpicStatus(epic1.getId());
-        System.out.println("Статус эпика 1 после завершения подзадачи: " + epic1.getStatus());
+        System.out.println("Статус эпика 1 после завершения подзадачи: " + taskManager.getEpic(epic1.getId()).getStatus());
 
         taskManager.deleteTaskById(task1.getId());
         System.out.println("Задачи после удаления задачи 1: " + taskManager.getAllTasks());
