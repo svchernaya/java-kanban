@@ -21,7 +21,7 @@ public class TaskManager {
         return tasks.get(id);
     }
 
-    public void deleteTask() {
+    public void deleteTasks() {
         tasks.clear();
     }
 
@@ -29,7 +29,7 @@ public class TaskManager {
         tasks.remove(id);
     }
 
-    public void updateTasks(Task task) {
+    public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
