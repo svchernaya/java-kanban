@@ -33,7 +33,6 @@ public class Task {
         this.description = description;
     }
 
-
     public int getId() {
         return id;
     }
@@ -65,7 +64,6 @@ public class Task {
     public void setStatus(Status status) {
         this.status = status;
     }
-
 
     @Override
     public boolean equals(Object o) {

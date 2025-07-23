@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Epic extends Task{
     private final ArrayList<Integer> subtaskIds;
@@ -24,9 +25,17 @@ public class Epic extends Task{
         this.subtaskIds = subtaskIds;
     }
 
-
     public void addSubtaskId(int subtaskId) {
-        subtaskIds.add(subtaskId);
+        TaskManager taskManager = Managers.getDefault();
+        HashMap<Integer, Epic> epics = new HashMap<>();
+        for (Epic epic : taskManager.getEpics()) {
+            if (epic.getId() == subtaskId) {
+                return;
+            }
+        }
+        if (subtaskId != this.getId()) {
+            subtaskIds.add(subtaskId);
+        }
     }
 
     public ArrayList<Integer> getSubtaskIds() {
