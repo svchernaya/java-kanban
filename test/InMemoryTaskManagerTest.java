@@ -46,7 +46,21 @@ class InMemoryTaskManagerTest {
         Subtask subtask = new Subtask("Подзадача", "Описание подзадачи", epic.getId());
         taskManager.addSubtask(subtask);
 
-        taskManager.removeEpic(epic.getId());
+        taskManager.deleteEpicById(epic.getId());
         assertNull(taskManager.getSubtask(subtask.getId()));
     }
+
+    @Test
+    void shouldUpdateTaskStatusCorrectlyThroughUpdateMethod() {
+        Task task = new Task("Задача", "Описание");
+        taskManager.addTask(task);
+
+        assertEquals(Status.NEW, taskManager.getTask(task.getId()).getStatus());
+
+        Task updatedTask = new Task("Задача", "Описание", Status.DONE, task.getId());
+        taskManager.updateTask(updatedTask);
+
+        assertEquals(Status.DONE, taskManager.getTask(task.getId()).getStatus());
+    }
+
 }
