@@ -20,6 +20,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void addTask(Task task) {
         task.setId(generateId());
         tasks.put(task.getId(), task);
+        historyManager.add(task);
     }
 
     @Override
@@ -37,7 +38,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTasks() {
         tasks.clear();
-        //удаление из истории каким-то образом
     }
 
     @Override
@@ -50,10 +50,12 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
+    //как обновления сделать?
 
     @Override
     public void addSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
+        historyManager.add(subtask);
         Epic epic = epics.get(subtask.getEpicId());
         if (epic != null) {
             epic.addSubtaskId(subtask.getId());
@@ -83,7 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
                 updateEpicStatus(epic.getId());
             }
         }
-        //удаление подзадачи из истории
+        historyManager.remove(id);//удаление подзадачи из истории
     }
 
     @Override
@@ -92,7 +94,6 @@ public class InMemoryTaskManager implements TaskManager {
             updateEpicStatus(epic.getId());
         }
         subtasks.clear();
-        //тоже
     }
 
     @Override
@@ -122,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasks.remove(subtaskId);
             }
         }
-        //удаление из истории
+        historyManager.remove(id);//удаление из истории
     }
 
     @Override

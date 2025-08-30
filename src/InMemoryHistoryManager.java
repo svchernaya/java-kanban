@@ -83,4 +83,5 @@ public class InMemoryHistoryManager implements HistoryManager{
         nodeToRemove.next = null;
         nodeToRemove.task = null;
     }
+
 }
