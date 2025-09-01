@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void ShouldBeDeletedOldVersionOfTask(){
+    public void ShouldBeDeletedOldVersionOfTask() {
         taskManager.addEpic(epic1);
         taskManager.addSubtask(subtask1);
         taskManager.addTask(task1);
@@ -44,7 +45,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void ShouldBeDeletedTask(){
+    public void ShouldBeDeletedTask() {
         taskManager.addEpic(epic1);
         taskManager.addSubtask(subtask1);
         taskManager.addTask(task1);

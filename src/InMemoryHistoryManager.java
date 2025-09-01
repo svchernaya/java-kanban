@@ -3,11 +3,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     private Node head;
     private Node tail;
     private int size = 0;
-    private Map<Integer,Node> historyMap = new HashMap<>();
+    private Map<Integer, Node> historyMap = new HashMap<>();
 
 
     class Node {
@@ -25,12 +25,12 @@ public class InMemoryHistoryManager implements HistoryManager{
 
 
     @Override
-    public void add(Task task){
+    public void add(Task task) {
         linkLast(task);
     }
 
     @Override
-    public List<Task> getHistory(){
+    public List<Task> getHistory() {
         return getTasks();
     }
 
@@ -63,24 +63,24 @@ public class InMemoryHistoryManager implements HistoryManager{
         nodeToRemove.task = null;
     }
 
-    private void linkLast(Task task){
+    private void linkLast(Task task) {
         if (historyMap.containsKey(task.getId()))
             remove(task.getId());
         final Node oldTail = tail;
-        final Node newTail = new Node(oldTail,task,null);
+        final Node newTail = new Node(oldTail, task, null);
         tail = newTail;
         if (oldTail == null)
             head = newTail;
         else
             oldTail.next = newTail;
         size++;
-        historyMap.put(task.getId(),newTail);
+        historyMap.put(task.getId(), newTail);
     }
 
-    private List<Task> getTasks(){
+    private List<Task> getTasks() {
         List<Task> historyList = new ArrayList<>();
         Node current = head;
-        while (!(current == null)){
+        while (!(current == null)) {
             historyList.add(current.task);
             current = current.next;
         }
