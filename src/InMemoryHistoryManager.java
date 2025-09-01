@@ -9,6 +9,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     private int size = 0;
     private Map<Integer,Node> historyMap = new HashMap<>();
 
+
     class Node {
 
         public Task task;
@@ -22,6 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
     }
 
+
     @Override
     public void add(Task task){
         linkLast(task);
@@ -31,31 +33,6 @@ public class InMemoryHistoryManager implements HistoryManager{
     public List<Task> getHistory(){
         return getTasks();
     }
-
-    public void linkLast(Task task){
-        if (historyMap.containsKey(task.getId()))
-            remove(task.getId());
-        final Node oldTail = tail;
-        final Node newTail = new Node(oldTail,task,null);
-        tail = newTail;
-        if (oldTail == null)
-            head = newTail;
-        else
-            oldTail.next = newTail;
-        size++;
-        historyMap.put(task.getId(),newTail);
-    }
-
-    public List<Task> getTasks(){
-        List<Task> historyList = new ArrayList<>();
-        Node current = head;
-        while (!(current == null)){
-            historyList.add(current.task);
-            current = current.next;
-        }
-        return historyList;
-    }
-
 
     @Override
     public void remove(int id) {
@@ -84,6 +61,30 @@ public class InMemoryHistoryManager implements HistoryManager{
         nodeToRemove.prev = null;
         nodeToRemove.next = null;
         nodeToRemove.task = null;
+    }
+
+    private void linkLast(Task task){
+        if (historyMap.containsKey(task.getId()))
+            remove(task.getId());
+        final Node oldTail = tail;
+        final Node newTail = new Node(oldTail,task,null);
+        tail = newTail;
+        if (oldTail == null)
+            head = newTail;
+        else
+            oldTail.next = newTail;
+        size++;
+        historyMap.put(task.getId(),newTail);
+    }
+
+    private List<Task> getTasks(){
+        List<Task> historyList = new ArrayList<>();
+        Node current = head;
+        while (!(current == null)){
+            historyList.add(current.task);
+            current = current.next;
+        }
+        return historyList;
     }
 
 }

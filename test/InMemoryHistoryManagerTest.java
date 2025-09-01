@@ -63,7 +63,9 @@ class InMemoryHistoryManagerTest {
     public void shouldKeepUpdatedVersionInHistory() {
         taskManager.addTask(task1);
         taskManager.getTask(task1.getId());
+
         task1.setTitle("Новая");
+
         taskManager.updateTask(task1);
         taskManager.getTask(task1.getId());
 

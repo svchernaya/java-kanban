@@ -34,7 +34,7 @@ public class Subtask extends Task {
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
+    void setEpicId(int epicId) {
         if (epicId != this.getId()) {
             this.epicId = epicId;
         }

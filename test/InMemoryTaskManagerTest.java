@@ -1,4 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -63,4 +65,18 @@ class InMemoryTaskManagerTest {
         assertEquals(Status.DONE, taskManager.getTask(task.getId()).getStatus());
     }
 
+    @Test
+    void epicShouldNotContainStaleSubtaskIdsAfterRemoval(){
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание 1", epic.getId());
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание 2", epic.getId());
+
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+        taskManager.deleteSubtaskById(subtask1.getId());
+
+        assertFalse(epic.getSubtaskIds().contains(subtask1.getId()));
+        assertTrue(epic.getSubtaskIds().contains(subtask2.getId()));
+    }
 }

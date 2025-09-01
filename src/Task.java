@@ -45,25 +45,26 @@ public class Task {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    void setStatus(Status status) {
         this.status = status;
     }
+
+    void setTitle(String title) {
+        this.title = title;
+    }
+
+    void setDescription(String description) {
+        this.description = description;
+    }
+
 
     @Override
     public boolean equals(Object o) {

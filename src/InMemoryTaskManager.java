@@ -58,6 +58,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addSubtask(Subtask subtask) {
+        subtask.setId(generateId());
         subtasks.put(subtask.getId(), subtask);
         historyManager.add(subtask);
         Epic epic = epics.get(subtask.getEpicId());
