@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.HashMap;
 
-public class Epic extends Task{
+public class Epic extends Task {
     private final List<Integer> subtaskIds;
 
 
