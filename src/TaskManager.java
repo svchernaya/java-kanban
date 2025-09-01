@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -30,7 +29,7 @@ public interface TaskManager {
 
     Epic getEpic(int id);
 
-    void removeEpic(int id);
+    void deleteEpicById(int id);
 
     void deleteAllEpics();
 
