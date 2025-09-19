@@ -5,6 +5,7 @@ public class Task {
     private String title;
     private String description;
     private Status status;
+    private Type type = Type.Task;
 
 
     public Task(String title, String description) {
@@ -36,6 +37,8 @@ public class Task {
     public int getId() {
         return id;
     }
+
+    public Type getType(){ return type; }
 
     public void setId(int id) {
         this.id = id;

@@ -1,6 +1,6 @@
 public class Subtask extends Task {
     private int epicId;
-
+    private Type type = Type.Subtask;
 
     public Subtask(String title, String description, int epicId) {
         super(title, description);

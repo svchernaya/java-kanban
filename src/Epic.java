@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class Epic extends Task {
     private final List<Integer> subtaskIds;
-
+    private Type type = Type.Epic;
 
     public Epic(String title, String description, List<Integer> subtaskIds) {
         super(title, description);
