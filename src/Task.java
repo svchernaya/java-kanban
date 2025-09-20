@@ -38,7 +38,9 @@ public class Task {
         return id;
     }
 
-    public Type getType(){ return type; }
+    public Type getType() {
+        return type;
+    }
 
     public void setId(int id) {
         this.id = id;

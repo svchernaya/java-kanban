@@ -138,25 +138,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     static FileBackedTaskManager loadFromFile(File file) {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.getPath());
-                String header = br.readLine();
-                while (br.ready()) {
-                    String line = br.readLine();
-                    Task task = fileBackedTaskManager.fromString(line);
-                    switch (task.getType()) {
-                        case Subtask:
-                            fileBackedTaskManager.addSubtask((Subtask) task);
-                            break;
-                        case Task:
-                            fileBackedTaskManager.addTask(task);
-                            break;
-                        case Epic:
-                            fileBackedTaskManager.addEpic((Epic) task);
-                            break;
-                        default:
-                            System.out.println("В файле присутствует задача несуществующего типа");
-                    }
+            String header = br.readLine();
+            while (br.ready()) {
+                String line = br.readLine();
+                Task task = fileBackedTaskManager.fromString(line);
+                switch (task.getType()) {
+                    case Subtask:
+                        fileBackedTaskManager.addSubtask((Subtask) task);
+                        break;
+                    case Task:
+                        fileBackedTaskManager.addTask(task);
+                        break;
+                    case Epic:
+                        fileBackedTaskManager.addEpic((Epic) task);
+                        break;
+                    default:
+                        System.out.println("В файле присутствует задача несуществующего типа");
                 }
-                return fileBackedTaskManager;
+            }
+            return fileBackedTaskManager;
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
