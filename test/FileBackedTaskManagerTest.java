@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FileBackedTaskManagerTest {
 
     @Test
-    public void testFileOperations (){
+    public void testFileOperations() {
         try {
             File file = File.createTempFile("task_manager_test", ".csv");
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.getPath());
