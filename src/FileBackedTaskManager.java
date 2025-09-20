@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -139,7 +138,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     static FileBackedTaskManager loadFromFile(File file) {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.getPath());
-            {
                 String header = br.readLine();
                 while (br.ready()) {
                     String line = br.readLine();
@@ -159,8 +157,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 return fileBackedTaskManager;
-
-            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
