@@ -41,6 +41,19 @@ public class Subtask extends Task {
     }
 
     @Override
+    public String toCsvString() {
+        String line = getId() + ","
+                + getType() + ","
+                + getTitle() + ","
+                + getStatus() + ","
+                + getDescription() + ","
+                + epicId + "\n";
+
+        return line;
+    }
+
+
+    @Override
     public String toString() {
         return "Subtask{" +
                 "id=" + getId() +

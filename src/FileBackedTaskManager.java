@@ -8,22 +8,32 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.filePath = path;
     }
 
-    public void save() {
-        try (BufferedWriter bufferHistory = new BufferedWriter(new FileWriter(filePath))) {
-            bufferHistory.write("id,type,name,status,description,epic\n");
-
-            for (Task task : super.getTasks()) {
-                bufferHistory.write(toString(task));
+    static FileBackedTaskManager loadFromFile(File file) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.getPath());
+            String header = br.readLine();
+            while (br.ready()) {
+                String line = br.readLine();
+                Task task = fileBackedTaskManager.fromString(line);
+                switch (task.getType()) {
+                    case Subtask:
+                        fileBackedTaskManager.addSubtask((Subtask) task);
+                        break;
+                    case Task:
+                        fileBackedTaskManager.addTask(task);
+                        break;
+                    case Epic:
+                        fileBackedTaskManager.addEpic((Epic) task);
+                        break;
+                    default:
+                        System.out.println("В файле присутствует задача несуществующего типа");
+                }
             }
-            for (Epic epic : super.getEpics()) {
-                bufferHistory.write(toString(epic));
-            }
-            for (Subtask subtask : super.getSubtasks()) {
-                bufferHistory.write(toString(subtask));
-            }
-
+            return fileBackedTaskManager;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка автосохранения");
+            throw new RuntimeException(e);
         }
     }
 
@@ -99,21 +109,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    public String toString(Task task) {
-        String line = task.getId() + ","
-                + task.getType() + ","
-                + task.getTitle() + ","
-                + task.getStatus() + ","
-                + task.getDescription();
-
-        if (task.getType() == Type.Subtask) {
-            Subtask subtask = (Subtask) task;
-            return line + "," + subtask.getEpicId() + "\n";
-        } else {
-            return line + "\n";
-        }
-    }
-
     public Task fromString(String value) {
         String[] split = value.split(",");
 
@@ -135,32 +130,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    static FileBackedTaskManager loadFromFile(File file) {
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.getPath());
-            String header = br.readLine();
-            while (br.ready()) {
-                String line = br.readLine();
-                Task task = fileBackedTaskManager.fromString(line);
-                switch (task.getType()) {
-                    case Subtask:
-                        fileBackedTaskManager.addSubtask((Subtask) task);
-                        break;
-                    case Task:
-                        fileBackedTaskManager.addTask(task);
-                        break;
-                    case Epic:
-                        fileBackedTaskManager.addEpic((Epic) task);
-                        break;
-                    default:
-                        System.out.println("В файле присутствует задача несуществующего типа");
-                }
+    private void save() {
+        try (BufferedWriter bufferHistory = new BufferedWriter(new FileWriter(filePath))) {
+            bufferHistory.write("id,type,name,status,description,epic\n");
+
+            for (Task task : super.getTasks()) {
+                bufferHistory.write(task.toCsvString());
             }
-            return fileBackedTaskManager;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            for (Epic epic : super.getEpics()) {
+                bufferHistory.write(epic.toCsvString());
+            }
+            for (Subtask subtask : super.getSubtasks()) {
+                bufferHistory.write(subtask.toCsvString());
+            }
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException("Ошибка автосохранения");
         }
     }
 }

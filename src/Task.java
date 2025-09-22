@@ -58,6 +58,16 @@ public class Task {
         return status;
     }
 
+    public String toCsvString() {
+        String line = id + ","
+                + type + ","
+                + title + ","
+                + status + ","
+                + description + "\n";
+
+        return line;
+    }
+
     void setStatus(Status status) {
         this.status = status;
     }
