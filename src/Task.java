@@ -5,6 +5,7 @@ public class Task {
     private String title;
     private String description;
     private Status status;
+    private Type type = Type.Task;
 
 
     public Task(String title, String description) {
@@ -37,6 +38,10 @@ public class Task {
         return id;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -51,6 +56,16 @@ public class Task {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String toCsvString() {
+        String line = id + ","
+                + type + ","
+                + title + ","
+                + status + ","
+                + description + "\n";
+
+        return line;
     }
 
     void setStatus(Status status) {
