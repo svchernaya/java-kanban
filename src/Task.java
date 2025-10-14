@@ -89,7 +89,7 @@ public class Task {
                 + title + ","
                 + status + ","
                 + description + ','
-                + duration + ','
+                + duration.toMinutes() + ','
                 + startTime + "\n";
 
         return line;

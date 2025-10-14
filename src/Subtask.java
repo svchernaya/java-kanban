@@ -52,7 +52,7 @@ public class Subtask extends Task {
                 + getStatus() + ","
                 + getDescription() + ","
                 + epicId + ","
-                + getDuration() + ","
+                + getDuration().toMinutes() + ","
                 + getStartTime() + "\n";
 
         return line;
