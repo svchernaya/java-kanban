@@ -53,18 +53,18 @@ class EpicTest {
 
     }
 
-//    @Test
-//    void shouldNotAllowToAddEpicAsSubtaskToAnotherEpic() {
-//        int originalSubtaskIdsCount = epic1.getSubtaskIds().size();
-//        epic1.addSubtaskId(epic2.getId());
-//
-//        assertEquals(epic1.getSubtaskIds().size(), originalSubtaskIdsCount);
-//    }
-//
-//    @Test
-//    void epicCannotBeItsOwnSubtask() {
-//        epic1.addSubtaskId(epic1.getId());
-//        assertFalse(epic1.getSubtaskIds().contains(epic1.getId()));
-//    }
+    @Test
+    void shouldNotAllowToAddEpicAsSubtaskToAnotherEpic() {
+        int originalSubtaskIdsCount = epic1.getSubtaskIds().size();
+        epic1.addSubtaskId(epic2.getId());
+
+        assertEquals(epic1.getSubtaskIds().size(), originalSubtaskIdsCount);
+    }
+
+    @Test
+    void epicCannotBeItsOwnSubtask() {
+        epic1.addSubtaskId(epic1.getId());
+        assertFalse(epic1.getSubtaskIds().contains(epic1.getId()));
+    }
 
 }

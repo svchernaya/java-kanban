@@ -130,10 +130,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 LocalDateTime startTime_task = LocalDateTime.parse(split[6]);
                 return new Task(name, description, status, id, duration_task, startTime_task);
             case Epic:
-                // еще надо придумать как добавить эти сраные duration в гребаный epic
                 Duration duration_epic = Duration.ofMinutes(Long.parseLong(split[5]));
                 LocalDateTime startTime_epic = LocalDateTime.parse(split[6]);
-                return new Epic(name, description, status, id, new ArrayList<>());
+                Epic epic = new Epic(name, description, status, id, new ArrayList<>());
+                epic.setDuration(duration_epic);
+                epic.setStartTime(startTime_epic);
+                return epic;
             default:
                 throw new IllegalArgumentException("Не верный тип задачи");
         }

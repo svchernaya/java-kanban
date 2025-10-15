@@ -68,8 +68,7 @@ public class Subtask extends Task {
                 ", status=" + getStatus() +
                 ", epicId=" + epicId +
                 ", duration=" + getDuration().toMinutes() + '\'' +
-                ", startTime=" + getStartTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + '\'' +
-                ", endTime=" + getEndTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
+                ", startTime=" + getStartTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
                 '}';
     }
 }

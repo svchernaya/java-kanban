@@ -9,8 +9,8 @@ public class Task {
     private String description;
     private Status status;
     private Type type = Type.Task;
-    private Duration duration; //продолжительность задачи, оценка того, сколько времени она займёт в минутах.
-    private LocalDateTime startTime; //дата и время, когда предполагается приступить к выполнению задачи.
+    private Duration duration;
+    private LocalDateTime startTime;
 
 
     public Task(String title, String description, Duration duration, LocalDateTime startTime) {
@@ -136,8 +136,7 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status=" + status + '\'' +
                 ", duration=" + duration.toMinutes() + '\'' +
-                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + '\'' +
-                ", endTime=" + getEndTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
+                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
                 '}';
     }
 }
