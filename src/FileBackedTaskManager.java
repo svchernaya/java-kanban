@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -11,7 +13,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     static FileBackedTaskManager loadFromFile(File file) {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.getPath());
-            String header = br.readLine();
             while (br.ready()) {
                 String line = br.readLine();
                 Task task = fileBackedTaskManager.fromString(line);
@@ -120,11 +121,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         switch (type) {
             case Subtask:
-                return new Subtask(name, description, status, id, (int) Integer.parseInt(split[5]));
+                Duration durationSubtask = Duration.ofMinutes(Long.parseLong(split[6]));
+                LocalDateTime startTimeSubtask = LocalDateTime.parse(split[7]);
+                return new Subtask(name, description, status, id, (int) Integer.parseInt(split[5]), durationSubtask, startTimeSubtask);
             case Task:
-                return new Task(name, description, status, id);
+                Duration durationTask = Duration.ofMinutes(Long.parseLong(split[5]));
+                LocalDateTime startTimeTask = LocalDateTime.parse(split[6]);
+                return new Task(name, description, status, id, durationTask, startTimeTask);
             case Epic:
-                return new Epic(name, description, status, id, new ArrayList<>());
+                Duration durationEpic = Duration.ofMinutes(Long.parseLong(split[5]));
+                LocalDateTime startTimeEpic = LocalDateTime.parse(split[6]);
+                Epic epic = new Epic(name, description, status, id, new ArrayList<>());
+                epic.setDuration(durationEpic);
+                epic.setStartTime(startTimeEpic);
+                return epic;
             default:
                 throw new IllegalArgumentException("Не верный тип задачи");
         }
@@ -132,7 +142,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter bufferHistory = new BufferedWriter(new FileWriter(filePath))) {
-            bufferHistory.write("id,type,name,status,description,epic\n");
+            bufferHistory.write("id,type,name,status,description,epic,duration,startTime\n");
 
             for (Task task : super.getTasks()) {
                 bufferHistory.write(task.toCsvString());

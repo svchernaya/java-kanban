@@ -1,30 +1,34 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Subtask extends Task {
     private int epicId;
     private Type type = Type.Subtask;
 
-    public Subtask(String title, String description, int epicId) {
-        super(title, description);
+    public Subtask(String title, String description, int epicId, Duration duration, LocalDateTime startTime) {
+        super(title, description, duration, startTime);
         if (epicId != this.getId()) {
             this.epicId = epicId;
         }
     }
 
-    public Subtask(String title, String description, Status status, int epicId) {
-        super(title, description, status);
+    public Subtask(String title, String description, Status status, int epicId, Duration duration, LocalDateTime startTime) {
+        super(title, description, status, duration, startTime);
         if (epicId != this.getId()) {
             this.epicId = epicId;
         }
     }
 
-    public Subtask(String title, String description, int id, int epicId) {
-        super(title, description, id);
+    public Subtask(String title, String description, int id, int epicId, Duration duration, LocalDateTime startTime) {
+        super(title, description, id, duration, startTime);
         if (epicId != this.getId()) {
             this.epicId = epicId;
         }
     }
 
-    public Subtask(String title, String description, Status status, int id, int epicId) {
-        super(title, description, status, id);
+    public Subtask(String title, String description, Status status, int id, int epicId, Duration duration, LocalDateTime startTime) {
+        super(title, description, status, id, duration, startTime);
         if (epicId != this.getId()) {
             this.epicId = epicId;
         }
@@ -47,7 +51,9 @@ public class Subtask extends Task {
                 + getTitle() + ","
                 + getStatus() + ","
                 + getDescription() + ","
-                + epicId + "\n";
+                + epicId + ","
+                + getDuration().toMinutes() + ","
+                + getStartTime() + "\n";
 
         return line;
     }
@@ -61,6 +67,8 @@ public class Subtask extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
                 ", epicId=" + epicId +
+                ", duration=" + getDuration().toMinutes() + '\'' +
+                ", startTime=" + getStartTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
                 '}';
     }
 }
