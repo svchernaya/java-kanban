@@ -15,7 +15,7 @@ class TaskTest {
     LocalDateTime startTime = LocalDateTime.of(2025, Month.MARCH, 5, 2, 30);
 
     Task task1 = new Task("Задача 1", "Описание задачи 1", duration, startTime);
-    Task task2 = new Task("Задача 1", "Описание задачи 1", duration, startTime);
+    Task task2 = new Task("Задача 1", "Описание задачи 1", duration.plusDays(10), startTime.plusYears(-10));
 
     @Test
     void shouldCalculateEndTimeCorrectly() {
@@ -51,7 +51,7 @@ class TaskTest {
     }
 
     @Test
-    void deleteTasksShouldRemoveAllTasks(){
+    void deleteTasksShouldRemoveAllTasks() {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
 

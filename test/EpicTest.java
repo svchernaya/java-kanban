@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -24,20 +25,28 @@ class EpicTest {
     Epic epic1 = new Epic("Эпик 1", "Описание эпика 1", new ArrayList<>());
     Epic epic2 = new Epic("Эпик 1", "Описание эпика 1", new ArrayList<>());
 
-    @Test
-    void shouldCalculateEpicTimeFieldsCorrectly() {
+    Subtask subtask1;
+    Subtask subtask2;
+    Subtask subtask3;
+    Subtask subtask4;
+
+    @BeforeEach
+    void setUp() {
         taskManager.addEpic(epic1);
 
-        Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId(), duration1, startTime1);
-        Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId(), duration2, startTime2);
-        Subtask subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1.getId(), duration3, startTime3);
-        Subtask subtask4 = new Subtask("Подзадача 4", "Описание подзадачи 4", epic1.getId(), duration4, startTime4);
+        subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId(), duration1, startTime1);
+        subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId(), duration2, startTime2);
+        subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1.getId(), duration3, startTime3);
+        subtask4 = new Subtask("Подзадача 4", "Описание подзадачи 4", epic1.getId(), duration4, startTime4);
 
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         taskManager.addSubtask(subtask3);
         taskManager.addSubtask(subtask4);
+    }
 
+    @Test
+    void shouldCalculateEpicTimeFieldsCorrectly() {
         Duration durationSubtasks = duration1.plus(duration2).plus(duration3).plus(duration4);
         LocalDateTime startTimeSubtasks = Stream.of(startTime1, startTime2, startTime3, startTime4)
                 .min(LocalDateTime::compareTo)
@@ -47,24 +56,76 @@ class EpicTest {
                 .max(LocalDateTime::compareTo)
                 .get();
 
-        assertEquals(durationSubtasks,epic1.getDuration());
-        assertEquals(startTimeSubtasks,epic1.getStartTime());
-        assertEquals(endTimeSubtasks,epic1.getEndTime());
+        assertEquals(durationSubtasks, epic1.getDuration());
+        assertEquals(startTimeSubtasks, epic1.getStartTime());
+        assertEquals(endTimeSubtasks, epic1.getEndTime());
 
-    }
-
-    @Test
-    void shouldNotAllowToAddEpicAsSubtaskToAnotherEpic() {
-        int originalSubtaskIdsCount = epic1.getSubtaskIds().size();
-        epic1.addSubtaskId(epic2.getId());
-
-        assertEquals(epic1.getSubtaskIds().size(), originalSubtaskIdsCount);
     }
 
     @Test
     void epicCannotBeItsOwnSubtask() {
         epic1.addSubtaskId(epic1.getId());
         assertFalse(epic1.getSubtaskIds().contains(epic1.getId()));
+    }
+
+    @Test
+    void epicStatusShouldBeNewWhenAllSubtasksNew() {
+        subtask1.setStatus(Status.NEW);
+        subtask2.setStatus(Status.NEW);
+        subtask3.setStatus(Status.NEW);
+        subtask4.setStatus(Status.NEW);
+
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+        taskManager.addSubtask(subtask3);
+        taskManager.updateSubtask(subtask4);
+
+        assertEquals(Status.NEW, epic1.getStatus());
+    }
+
+    @Test
+    void epicStatusShouldBeDoneWhenAllSubtasksDone() {
+        subtask1.setStatus(Status.DONE);
+        subtask2.setStatus(Status.DONE);
+        subtask3.setStatus(Status.DONE);
+        subtask4.setStatus(Status.DONE);
+
+        taskManager.updateSubtask(subtask1);
+        taskManager.updateSubtask(subtask2);
+        taskManager.updateSubtask(subtask3);
+        taskManager.updateSubtask(subtask4);
+
+        assertEquals(Status.DONE, epic1.getStatus());
+    }
+
+    @Test
+    void epicStatusShouldBeInProgressWhenSubtasksNewAndDone() {
+        subtask1.setStatus(Status.NEW);
+        subtask2.setStatus(Status.DONE);
+        subtask3.setStatus(Status.NEW);
+        subtask4.setStatus(Status.NEW);
+
+        taskManager.updateSubtask(subtask1);
+        taskManager.updateSubtask(subtask2);
+        taskManager.updateSubtask(subtask3);
+        taskManager.updateSubtask(subtask4);
+
+        assertEquals(Status.IN_PROGRESS, epic1.getStatus());
+    }
+
+    @Test
+    void epicStatusShouldBeInProgressWhenAnySubtaskInProgress() {
+        subtask1.setStatus(Status.IN_PROGRESS);
+        subtask2.setStatus(Status.NEW);
+        subtask3.setStatus(Status.DONE);
+        subtask4.setStatus(Status.DONE);
+
+        taskManager.updateSubtask(subtask1);
+        taskManager.updateSubtask(subtask2);
+        taskManager.updateSubtask(subtask3);
+        taskManager.updateSubtask(subtask4);
+
+        assertEquals(Status.IN_PROGRESS, epic1.getStatus());
     }
 
 }

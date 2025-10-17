@@ -17,7 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = Managers.getDefaultHistory();
     }
 
-
     @Override
     public void addTask(Task task) {
         if (hasTimeOverlap(task)) {
@@ -151,9 +150,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addEpic(Epic epic) {
-        if (hasTimeOverlap(epic)) {
-            throw new IllegalArgumentException("Эпик пересекается по времени с существующими!");
-        }
         epic.setId(generateId());
         epics.put(epic.getId(), epic);
         historyManager.add(epic);
@@ -199,9 +195,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        if (hasTimeOverlap(epic)) {
-            throw new IllegalArgumentException("Эпик пересекается по времени с существующими!");
-        }
         epics.put(epic.getId(), epic);
         updateEpicTime(epic.getId());
     }
@@ -312,6 +305,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean isTimeOverlap(Task task1, Task task2) {
+        if (task1.getId() == task2.getId()) {
+            return false;
+        }
+        if (task1.getStartTime() == null || task1.getEndTime() == null ||
+                task2.getStartTime() == null || task2.getEndTime() == null) {
+            return false;
+        }
         if (!(task1.getEndTime().isBefore(task2.getStartTime()) || task2.getEndTime().isBefore(task1.getStartTime()))) {
             return true;
         } else {
@@ -320,6 +320,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean hasTimeOverlap(Task task) {
+        if (task.getStartTime() == null || task.getEndTime() == null) {
+            return false;
+        }
         if ((getPrioritizedTasks().stream()
                 .filter(task1 -> isTimeOverlap(task, task1))
                 .collect(Collectors.toList())).isEmpty()) {
