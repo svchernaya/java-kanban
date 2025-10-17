@@ -1,7 +1,6 @@
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -122,19 +121,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         switch (type) {
             case Subtask:
-                Duration duration_subtask = Duration.ofMinutes(Long.parseLong(split[6]));
-                LocalDateTime startTime_subtask = LocalDateTime.parse(split[7]);
-                return new Subtask(name, description, status, id, (int) Integer.parseInt(split[5]), duration_subtask, startTime_subtask);
+                Duration durationSubtask = Duration.ofMinutes(Long.parseLong(split[6]));
+                LocalDateTime startTimeSubtask = LocalDateTime.parse(split[7]);
+                return new Subtask(name, description, status, id, (int) Integer.parseInt(split[5]), durationSubtask, startTimeSubtask);
             case Task:
-                Duration duration_task = Duration.ofMinutes(Long.parseLong(split[5]));
-                LocalDateTime startTime_task = LocalDateTime.parse(split[6]);
-                return new Task(name, description, status, id, duration_task, startTime_task);
+                Duration durationTask = Duration.ofMinutes(Long.parseLong(split[5]));
+                LocalDateTime startTimeTask = LocalDateTime.parse(split[6]);
+                return new Task(name, description, status, id, durationTask, startTimeTask);
             case Epic:
-                Duration duration_epic = Duration.ofMinutes(Long.parseLong(split[5]));
-                LocalDateTime startTime_epic = LocalDateTime.parse(split[6]);
+                Duration durationEpic = Duration.ofMinutes(Long.parseLong(split[5]));
+                LocalDateTime startTimeEpic = LocalDateTime.parse(split[6]);
                 Epic epic = new Epic(name, description, status, id, new ArrayList<>());
-                epic.setDuration(duration_epic);
-                epic.setStartTime(startTime_epic);
+                epic.setDuration(durationEpic);
+                epic.setStartTime(startTimeEpic);
                 return epic;
             default:
                 throw new IllegalArgumentException("Не верный тип задачи");
