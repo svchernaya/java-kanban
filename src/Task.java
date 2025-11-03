@@ -1,3 +1,6 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -6,32 +9,42 @@ public class Task {
     private String description;
     private Status status;
     private Type type = Type.Task;
+    private Duration duration;
+    private LocalDateTime startTime;
 
 
-    public Task(String title, String description) {
+    public Task(String title, String description, Duration duration, LocalDateTime startTime) {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
-    public Task(String title, String description, Status status) {
+    public Task(String title, String description, Status status, Duration duration, LocalDateTime startTime) {
         this.title = title;
         this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
-    public Task(String title, String description, int id) {
+    public Task(String title, String description, int id, Duration duration, LocalDateTime startTime) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
-    public Task(String title, String description, Status status, int id) {
+    public Task(String title, String description, Status status, int id, Duration duration, LocalDateTime startTime) {
         this.id = id;
         this.title = title;
         this.status = status;
         this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public int getId() {
@@ -58,12 +71,29 @@ public class Task {
         return status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration);
+    }
+
     public String toCsvString() {
         String line = id + ","
                 + type + ","
                 + title + ","
                 + status + ","
-                + description + "\n";
+                + description + ','
+                + duration.toMinutes() + ','
+                + startTime + "\n";
 
         return line;
     }
@@ -78,6 +108,14 @@ public class Task {
 
     void setDescription(String description) {
         this.description = description;
+    }
+
+    void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
 
@@ -99,7 +137,9 @@ public class Task {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", status=" + status +
+                ", status=" + status + '\'' +
+                ", duration=" + duration.toMinutes() + '\'' +
+                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) +
                 '}';
     }
 }
