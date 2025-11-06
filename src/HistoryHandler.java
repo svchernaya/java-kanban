@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,9 +29,9 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
             gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
             Gson gson = gsonBuilder.setPrettyPrinting().create();
             String historyJson = gson.toJson(historyTasks);
-            sendText(httpExchange,historyJson);
-        }catch (Exception e) {
-            // обработать исключение
+            sendText(httpExchange, historyJson);
+        } catch (Exception e) {
+            sendInternalError(httpExchange);
         }
     }
 }

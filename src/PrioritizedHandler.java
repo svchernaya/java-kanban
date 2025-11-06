@@ -29,9 +29,9 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
             gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
             Gson gson = gsonBuilder.setPrettyPrinting().create();
             String historyJson = gson.toJson(prioritizedTasks);
-            sendText(httpExchange,historyJson);
-        }catch (Exception e) {
-            // обработать исключение
+            sendText(httpExchange, historyJson);
+        } catch (Exception e) {
+            sendInternalError(httpExchange);
         }
     }
 }

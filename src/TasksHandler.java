@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -7,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
@@ -28,46 +25,75 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             String lastElement = splitStrings[splitStrings.length - 1];
             String secondLastElement = splitStrings[splitStrings.length - 2];
 
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
-            gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
-            Gson gson = gsonBuilder.setPrettyPrinting().create();
+            Gson gson = HttpTaskServer.getGson();
 
-            if (lastElement.equals("tasks") ){
-                switch(method){
+            if (lastElement.equals("tasks")) {
+                switch (method) {
                     case "GET":
                         List<Task> tasks = taskManager.getTasks();
                         String tasksJson = gson.toJson(tasks);
-                        sendText(httpExchange,tasksJson);
+                        sendText(httpExchange, tasksJson);
                         break;
                     case "POST":
-                        InputStream inputStream = httpExchange.getRequestBody();
-                        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                        Task task = gson.fromJson(body, Task.class);
-                        taskManager.addTask(task);
-                        sendCreated(httpExchange);
+                        try {
+                            InputStream inputStream = httpExchange.getRequestBody();
+                            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                            Task task = gson.fromJson(body, Task.class);
+                            taskManager.addTask(task);
+                            sendCreated(httpExchange);
+                        } catch (IllegalArgumentException e) {
+                            if (e.getMessage().contains("пересекается")) {
+                                sendHasInteractions(httpExchange);
+                            } else {
+                                sendInternalError(httpExchange);
+                            }
+                        }
+                        break;
                 }
 
             }
-            if (secondLastElement.equals("tasks")){
-                switch (method){
+            if (secondLastElement.equals("tasks")) {
+                switch (method) {
                     case "GET":
                         Task taskForGet = taskManager.getTask(Integer.parseInt(lastElement));
+                        if (taskForGet == null) {
+                            sendNotFound(httpExchange);
+                            return;
+                        }
                         String taskJson = gson.toJson(taskForGet);
-                        sendText(httpExchange,taskJson);
+                        sendText(httpExchange, taskJson);
+                        break;
                     case "POST":
-                        InputStream inputStream = httpExchange.getRequestBody();
-                        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                        Task taskForPost = gson.fromJson(body, Task.class);
+                        try {
+                            InputStream inputStream = httpExchange.getRequestBody();
+                            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                            Task taskForPost = gson.fromJson(body, Task.class);
+                            int taskId = Integer.parseInt(lastElement);
+                            taskForPost.setId(taskId);
+                            taskManager.updateTask(taskForPost);
+                            sendCreated(httpExchange);
+                        } catch (IllegalArgumentException e) {
+                            if (e.getMessage().contains("пересекается")) {
+                                sendHasInteractions(httpExchange);
+                            } else {
+                                sendInternalError(httpExchange);
+                            }
+                        }
+                        break;
+                    case "DELETE":
                         int taskId = Integer.parseInt(lastElement);
-                        taskForPost.setId(taskId);
-                        taskManager.updateTask(taskForPost);
-                        sendCreated(httpExchange);
+                        if (taskManager.getTask(taskId) == null) {
+                            sendNotFound(httpExchange);
+                            return;
+                        }
+                        taskManager.deleteTaskById(taskId);
+                        sendText(httpExchange, "Задача удалена");
+                        break;
                 }
 
             }
-        }catch (Exception e) {
-            // обработать исключение
+        } catch (Exception e) {
+            sendInternalError(httpExchange);
         }
     }
 }

@@ -1,4 +1,5 @@
 import com.sun.net.httpserver.HttpExchange;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -10,6 +11,7 @@ public class BaseHttpHandler {
         h.getResponseBody().write(resp);
         h.close();
     }
+
     protected void sendCreated(HttpExchange h) throws IOException {
         h.sendResponseHeaders(201, 0);
         h.close();
@@ -19,10 +21,12 @@ public class BaseHttpHandler {
         h.sendResponseHeaders(404, 0);
         h.close();
     }
+
     protected void sendHasInteractions(HttpExchange h) throws IOException {
         h.sendResponseHeaders(406, 0);
         h.close();
     }
+
     protected void sendInternalError(HttpExchange h) throws IOException {
         h.sendResponseHeaders(500, 0);
         h.close();

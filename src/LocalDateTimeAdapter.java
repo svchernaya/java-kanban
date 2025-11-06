@@ -8,12 +8,22 @@ import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
     @Override
-    public void write(final JsonWriter jsonWriter,final LocalDateTime localDateTime) throws IOException{
-        jsonWriter.value(localDateTime.format(formatter));
+    public void write(final JsonWriter jsonWriter, final LocalDateTime localDateTime) throws IOException {
+        if (localDateTime == null) {
+            jsonWriter.nullValue();
+        } else {
+            jsonWriter.value(localDateTime.format(formatter));
+        }
     }
+
     @Override
-    public LocalDateTime read(final JsonReader jsonReader) throws IOException{
-        return LocalDateTime.parse(jsonReader.nextString(),formatter);
+    public LocalDateTime read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        if (value == null || value.equals("null")) {
+            return null;
+        }
+        return LocalDateTime.parse(value, formatter);
     }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Epic extends Task {
     private final List<Integer> subtaskIds;
-    private Type type = Type.Epic;
     private LocalDateTime endTime;
 
     public Epic(String title, String description, List<Integer> subtaskIds) {

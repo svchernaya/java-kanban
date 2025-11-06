@@ -4,7 +4,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Subtask extends Task {
     private int epicId;
-    private Type type = Type.Subtask;
 
     public Subtask(String title, String description, int epicId, Duration duration, LocalDateTime startTime) {
         super(title, description, duration, startTime);
