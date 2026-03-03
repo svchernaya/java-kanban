@@ -265,7 +265,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     private Duration durationEpic(int id) {
         Duration sumSubtasks = Duration.ofMinutes(0);
-        ;
         List<Integer> subtaskIds = epics.get(id).getSubtaskIds();
         for (int idSubtask : subtaskIds) {
             Duration subtaskDuration = subtasks.get(idSubtask).getDuration();

@@ -37,6 +37,8 @@ public interface TaskManager {
 
     void updateEpic(Epic epic);
 
+    List<Task> getPrioritizedTasks();
+
     List<Task> getHistory();
 
     List<Subtask> getEpicSubtasks(int epicId);
